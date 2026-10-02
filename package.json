@@ -1,0 +1,55 @@
+{
+  "name": "scc-code-counter",
+  "version": "1.0.0",
+  "description": "基于 SCC (Succinct Code Counter) 的跨平台代码统计桌面应用",
+  "main": "./public/electron/main.js",
+  "homepage": "https://github.com/antbuster/scc-code-counter",
+  "author": {
+    "name": "SCC Code Counter",
+    "email": "scc-code-counter@users.noreply.github.com"
+  },
+  "scripts": {
+    "dev": "ee-bin dev",
+    "build": "pnpm run build-frontend && pnpm run build-electron",
+    "start": "ee-bin start",
+    "dev-frontend": "ee-bin dev --serve=frontend",
+    "dev-electron": "ee-bin dev --serve=electron",
+    "build-frontend": "ee-bin build --cmds=frontend && ee-bin move --flag=frontend_dist",
+    "build-electron": "ee-bin build --cmds=electron",
+    "build-w": "ee-bin build --cmds=win64",
+    "build-we": "ee-bin build --cmds=win_e",
+    "build-m": "ee-bin build --cmds=mac_arm64",
+    "build-m-x86": "ee-bin build --cmds=mac",
+    "build-l": "ee-bin build --cmds=linux"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "Electron",
+    "electron-egg",
+    "SCC",
+    "code counter"
+  ],
+  "author": "SCC Code Counter",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "ee-bin": "^5.0.0",
+    "electron": "^39.8.10",
+    "electron-builder": "^26.3.5",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "ee-core": "^5.0.1",
+    "electron-updater": "^6.7.3",
+    "xlsx": "^0.18.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild",
+      "electron-winstaller"
+    ]
+  }
+}

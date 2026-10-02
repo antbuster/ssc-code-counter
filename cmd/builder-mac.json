@@ -1,0 +1,33 @@
+{
+  "productName": "SCCCodeCounter",
+  "appId": "com.scc.codecounter",
+  "copyright": "Copyright © 2026 SCC Code Counter",
+  "directories": {
+    "output": "out"
+  },
+  "asar": true,
+  "electronLanguages": ["en-US", "zh-CN"],
+  "files": [
+    "public",
+    "package.json",
+    "node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "build/extraResources",
+      "to": "extraResources"
+    }
+  ],
+  "publish": [
+    {
+      "provider": "generic",
+      "url": ""
+    }
+  ],
+  "mac": {
+    "icon": "build/icons/icon-mac.png",
+    "artifactName": "${productName}-${os}-${version}-${arch}.${ext}",
+    "darkModeSupport": true,
+    "hardenedRuntime": false
+  }
+}

@@ -1,0 +1,95 @@
+name: Build (Windows & Linux)
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            package_cmd: pnpm run build-w
+            artifact_name: SCCCodeCounter-windows
+            artifact_files: 'out/*.exe'
+          - os: ubuntu-latest
+            package_cmd: pnpm run build-l
+            artifact_name: SCCCodeCounter-linux
+            artifact_files: 'out/*.deb'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Cache electron binaries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/AppData/Local/electron/Cache
+          key: electron-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            electron-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 仓库从 Windows 提交时可能丢失可执行位，打包前显式修正内置 SCC 权限
+      - name: Fix SCC binary permissions (Linux)
+        if: runner.os == 'Linux'
+        run: chmod +x build/extraResources/scc/*/scc
+
+      - name: Build frontend & main process
+        run: pnpm run build
+
+      - name: Package ${{ matrix.os }}
+        run: ${{ matrix.package_cmd }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_files }}
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Release (tag)
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

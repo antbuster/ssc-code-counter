@@ -1,0 +1,23 @@
+{
+  "name": "scc-code-counter-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host --port 8080",
+    "serve": "vite --host --port 8080",
+    "build": "vite build",
+    "build-staging": "vite build --mode staging",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "echarts": "^5.6.0",
+    "naive-ui": "^2.41.0",
+    "vue": "^3.5.12",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "terser": "^5.19.1",
+    "vite": "^5.4.11"
+  }
+}

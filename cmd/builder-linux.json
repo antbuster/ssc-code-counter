@@ -1,0 +1,37 @@
+{
+  "productName": "SCCCodeCounter",
+  "appId": "com.scc.codecounter",
+  "copyright": "Copyright © 2026 SCC Code Counter",
+  "directories": {
+    "output": "out"
+  },
+  "asar": true,
+  "files": [
+    "public",
+    "package.json",
+    "node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "build/extraResources",
+      "to": "extraResources"
+    }
+  ],
+  "publish": [
+    {
+      "provider": "generic",
+      "url": ""
+    }
+  ],
+  "linux": {
+    "icon": "build/icons/icon.png",
+    "artifactName": "${productName}-${os}-${version}-${arch}.${ext}",
+    "maintainer": "SCC Code Counter <scc-code-counter@users.noreply.github.com>",
+    "category": "Development",
+    "target": [
+      {
+        "target": "deb"
+      }
+    ]
+  }
+}
